@@ -45,9 +45,9 @@
     - [ ] Indirect indexed: ($c0),Y
 
 - Registers:
-    - [ ] Program counter register
-    - [ ] Program status register
-    - [ ] Working registers (A, X and Y)
+    - [x] Program counter register
+    - [x] Program status register
+    - [x] Working registers (A, X and Y)
     - [ ] Stack pointer register
 
 - PSR flags:
