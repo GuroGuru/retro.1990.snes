@@ -1,13 +1,3 @@
-; -- TOPICS ---------------------------------------------------------
-;
-; * Tools: n/a
-; * Registers: n/a
-; * Instructions: adc, inx, iny
-; * Addressing modes: Zero-page, zero-page with offset X
-; * Flags: ?
-;
-; -------------------------------------------------------------------
-
 .p816
 
 .segment "CODE"
@@ -15,17 +5,21 @@
     clc
     xce
 
-    lda #$10
-    sta $00
-    inx
+    lda #$00
+    ldx #$00
+    ldy #$00
 
-    iny
-    sty $00,X
-    inx
+    txa
+    sta $0010
 
-    clc
-    adc #$01
-    sta $00,X
+    tya
+    sta $0011
+
+    tax
+    stx $0012
+
+    tay
+    sty $0013
 .endproc
 
 .segment "VECTORS"

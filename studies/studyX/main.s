@@ -1,14 +1,22 @@
-CGDATA  = $2122         ; data for CGRAM write
+CGADDR = $2121
+CGDATA = $2122
 
-.p816                   ; assembler directive, inform the assembler this is 65816 assembly
+.p816
 
 .segment "CODE"
 .proc ResetHandler
-    lda #$ff            ; color low byte
-    sta CGDATA          ; add data to CGRAM
-    lda #$ee            ; color high byte
-    sta CGDATA          ; add data to CGRAM   
+    clc
+    xce 
+    
+    lda #$00
+    sta CGADDR
+
+    lda #$ff
+    sta CGDATA
+
+    lda #$ee
+    sta CGDATA
 .endproc
 
 .segment "VECTOR"
-.addr ResetHandler      ; reset vector pointing to ResetHandler procedure
+.addr ResetHandler
