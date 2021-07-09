@@ -20,16 +20,16 @@
 
 #### Topics:
 - Instructions:
-    - [x] Loading registers
-    - [x] Storing in memory
-    - [x] Transfering
-    - [x] Adding or incrementing
-    - [ ] Subtracting or decrementing
-    - [ ] Comparing
-    - [ ] Branching
-    - [ ] Jumping
-    - [ ] Subroutines
-    - [ ] Stack manipulation
+    - [x] lda, ldx, ldy (loading)
+    - [x] sta, stx, sty, stz (storing)
+    - [x] tax, tay, txa, tya (transfering)
+    - [x] adc, inx, iny (add)
+    - [ ] sbc, dex, dey (sub)
+    - [ ] comparing
+    - [ ] branching
+    - [ ] jumping
+    - [ ] subroutines
+    - [ ] stack manipulation
 
 - Addressing modes:
     - [x] Immediate: #$c0
