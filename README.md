@@ -24,7 +24,7 @@
     - [x] sta, stx, sty, stz (storing)
     - [x] tax, tay, txa, tya (transfering)
     - [x] adc, inx, iny (add)
-    - [ ] sbc, dex, dey (sub)
+    - [x] sbc, dex, dey (sub)
     - [ ] comparing
     - [ ] branching
     - [ ] jumping
@@ -36,8 +36,8 @@
     - [x] Absolute: $c000
     - [x] Zero page: $c0
     - [x] Zero page,X: $c0,X
-    - [ ] Absolute,X: $c000,X
-    - [ ] Absolute,Y: $c000,Y
+    - [x] Absolute,X: $c000,X
+    - [x] Absolute,Y: $c000,Y
     - [ ] Relative: $c0 or label
     - [ ] Implicit
     - [ ] Indirect: ($c000)
@@ -52,13 +52,13 @@
 
 - PSR flags:
     - [x] E
-    - [ ] N
+    - [x] N
     - [ ] V
     - [ ] M
     - [ ] X
     - [ ] D
     - [ ] I
-    - [ ] Z
+    - [x] Z
     - [x] C
 
 - Pong:
