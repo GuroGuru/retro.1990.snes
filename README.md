@@ -25,9 +25,9 @@
     - [x] tax, tay, txa, tya (transfering)
     - [x] adc, inx, iny (add)
     - [x] sbc, dex, dey (sub)
-    - [ ] comparing
-    - [ ] branching
-    - [ ] jumping
+    - [x] cmp, cpx, cpy (comparing)
+    - [x] beq, bne, bcs, bcc (branching)
+    - [x] jmp (jumping)
     - [ ] subroutines
     - [ ] stack manipulation
 
@@ -38,8 +38,8 @@
     - [x] Zero page,X: $c0,X
     - [x] Absolute,X: $c000,X
     - [x] Absolute,Y: $c000,Y
-    - [ ] Relative: $c0 or label
-    - [ ] Implicit
+    - [x] Relative: $c0 or label
+    - [x] Implicit
     - [ ] Indirect: ($c000)
     - [ ] Indexed indirect: ($c0,X)
     - [ ] Indirect indexed: ($c0),Y
