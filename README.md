@@ -28,7 +28,7 @@
     - [x] cmp, cpx, cpy (comparing)
     - [x] beq, bne, bcs, bcc (branching)
     - [x] jmp (jumping)
-    - [ ] stack manipulation
+    - [x] pha, pla (stack manipulation)
     - [ ] subroutines
 
 - Addressing modes:
@@ -48,7 +48,7 @@
     - [x] Program counter register
     - [x] Program status register
     - [x] Working registers (A, X and Y)
-    - [ ] Stack pointer register
+    - [x] Stack pointer register
 
 - PSR flags:
     - [x] E
