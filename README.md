@@ -28,8 +28,8 @@
     - [x] cmp, cpx, cpy (comparing)
     - [x] beq, bne, bcs, bcc (branching)
     - [x] jmp (jumping)
-    - [ ] subroutines
     - [ ] stack manipulation
+    - [ ] subroutines
 
 - Addressing modes:
     - [x] Immediate: #$c0
