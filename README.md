@@ -40,9 +40,9 @@
     - [x] Absolute,Y: $c000,Y
     - [x] Relative: $c0 or label
     - [x] Implicit
-    - [ ] Indirect: ($c000)
-    - [ ] Indexed indirect: ($c0,X)
-    - [ ] Indirect indexed: ($c0),Y
+    - [x] Indirect: ($c000)
+    - [x] Indexed indirect: ($c0,X)
+    - [x] Indirect indexed: ($c0),Y
 
 - Registers:
     - [x] Program counter register
