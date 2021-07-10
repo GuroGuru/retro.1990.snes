@@ -29,7 +29,7 @@
     - [x] beq, bne, bcs, bcc (branching)
     - [x] jmp (jumping)
     - [x] pha, pla (stack manipulation)
-    - [ ] subroutines
+    - [x] jsr, rts (subroutines)
 
 - Addressing modes:
     - [x] Immediate: #$c0

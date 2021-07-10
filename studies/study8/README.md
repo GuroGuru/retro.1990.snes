@@ -1,7 +1,5 @@
 ### SnesDevStudies 8 - Stack
 
-- Little endian
-
 ---
 
 #### Topics introduced:
