@@ -1,6 +1,6 @@
 ### SnesDevStudies 7 - Indirect modes
 
-- Little endian
+- Little endian: ( [most significant bits] [least significant bits] )
 
 ---
 

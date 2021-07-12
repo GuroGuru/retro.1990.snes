@@ -1,4 +1,4 @@
-### SnesDevStudies 10 - Palette
+### SnesDevStudies 10 - Uploading colors
 
 ---
 
