@@ -1,18 +1,14 @@
 ### SnesDevStudies 1 - 65816 native mode
 
-This study shows how to enable the processor **native mode**.
+The **65816** processor is a superset the popular **6502** model, the CPU used by many consoles released during the 80s-90s, including the original NES. 
 
-- 6502 x 65816
-- Emulation x native
+65816 starts in a 6502 compatibility mode called **emulation mode** and to use the new set of instructions we need to turn off the emulation mode, entering then in the processor **native mode**.
+
+<!-- 
+
+
+
 - Registers
-- The memmap.cfg
-- The assembly file
-- Assembler directives
-- Hardware vectors
-- The ca65 compiler
-- The ld65 linker
-- Instructions **clc** and **xce**
-- Open bsnes-plus debugger
 - The **program counter register**
 - The **processor status register** flags **E** and **C**
 
@@ -26,4 +22,4 @@ This study shows how to enable the processor **native mode**.
 
 - PSR flags:
     - [x] E
-    - [x] C
+    - [x] C -->
