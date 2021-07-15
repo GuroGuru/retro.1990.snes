@@ -1,8 +1,10 @@
-### SnesDevStudies 1 - 65816 native mode
+### SnesDevStudies 1 - The native mode
 
-The **65816** processor is a superset the popular **6502** model, the CPU used by many consoles released during the 80s-90s, including the original NES. 
+The **65816** processor is a superset the popular **6502** model, the CPU used by many consoles released during the 80s-90s, including the original NES.
 
-65816 starts in a 6502 compatibility mode called **emulation mode** and to use the new set of instructions we need to turn off the emulation mode, entering then in the processor **native mode**.
+To guarantee [retrocompatibility](https://georgjz.github.io/snesaa02/) with its predecessor, 65816 starts in a mode called **emulation mode** where only the 6502 instruction set is avaiable. Using 65816 set requires turn the emulation mode off, thus switching the processor to the mode called **native mode**.
+
+This can be achieved by using the instruction `xce`.
 
 <!-- 
 
