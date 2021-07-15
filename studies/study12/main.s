@@ -1,3 +1,5 @@
+VMADDL  = $2116
+VMADDH  = $2117
 VMDATAL = $2118
 VMDATAH = $2119
 CGADDR  = $2121
@@ -16,7 +18,9 @@ ColorData:  .incbin "SpriteColors.pal"
 
     lda #$11
     sta CGADDR
-    ldx #$00     
+    ldx #$00    
+    stz VMADDL 
+    stz VMADDH
 
 CGRAMLoop:
     lda ColorData, X

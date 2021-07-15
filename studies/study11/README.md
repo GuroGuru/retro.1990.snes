@@ -1,4 +1,4 @@
-### SnesDevStudies 11 - Uploading tiles
+### SnesDevStudies 11 - VRAM and tiles
 
 ---
 

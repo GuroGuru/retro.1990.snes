@@ -1,4 +1,4 @@
-### SnesDevStudies 12 - Tilemaps
+### SnesDevStudies 12 - Tiles and palettes
 
 ---
 

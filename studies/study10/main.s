@@ -8,11 +8,12 @@ CGDATA  = $2122
     clc
     xce 
     
+    stz CGADDR
+
     ; add pink ($6eff) to palette
-    lda #$00
-    sta CGADDR
     lda #$ff
     sta CGDATA
+    
     lda #$6e
     sta CGDATA
 .endproc

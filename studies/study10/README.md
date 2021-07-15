@@ -1,4 +1,4 @@
-### SnesDevStudies 10 - Uploading colors
+### SnesDevStudies 10 - CGRAM and palettes
 
 ---
 
