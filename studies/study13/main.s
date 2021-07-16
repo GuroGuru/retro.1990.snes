@@ -1,10 +1,13 @@
-CGADDR  = $2121
-CGDATA  = $2122
-VMDATAL = $2118
-VMDATAH = $2119
-OAMADDL = $2102     ; address for accessing OAM
-OAMADDH = $2103
-OAMDATA = $2104     ; data for OAM write
+VMADDL      = $2116
+VMADDH      = $2117
+VMDATAL     = $2118
+VMDATAH     = $2119
+CGADDR      = $2121
+CGDATA      = $2122
+INIDISP     = $2100
+TM          = $212c
+NMITIMEN    = $4200
+RDNMI       = $4210
 
 .p816 
 
@@ -15,11 +18,14 @@ ColorData:  .incbin "SpriteColors.pal"
 .segment "CODE"
 .proc ResetHandler
     clc
-    xce   
+    xce  
+     
+    ldx #$00    
+    stz VMADDL 
+    stz VMADDH
 
-    lda #$11
+    lda #$81
     sta CGADDR
-    ldx #$00     
 
 CGRAMLoop:
     lda ColorData, X
@@ -43,51 +49,34 @@ VRAMLoop:
     bcc VRAMLoop
     ldx #$00
 
-OAMRAMData:    
-    ; set up OAM data              
-    stz OAMADDL             ; set the OAM address to ...
-    stz OAMADDH             ; ...at $0000
+DisplayObjects:
+    ; make Objects visible
+    lda #$10
+    sta TM
+    
+    ; release forced blanking, set screen to full brightness
+    lda #$0f
+    sta INIDISP
+    
+    ; enable NMI, turn on automatic joypad polling
+    lda #$81
+    sta NMITIMEN     
 
-    ; OAM data for first sprite
-    lda # (256/2 - 8)       ; horizontal position of first sprite
-    sta OAMDATA
-    lda # (224/2 - 8)       ; vertical position of first sprite
-    sta OAMDATA
-    lda #$00                ; name of first sprite
-    sta OAMDATA
-    lda #$00                ; no flip, prio 0, palette 0
-    sta OAMDATA
+.endproc
 
-    ; OAM data for second sprite
-    lda # (256/2)           ; horizontal position of second sprite
-    sta OAMDATA
-    lda # (224/2 - 8)       ; vertical position of second sprite
-    sta OAMDATA
-    lda #$01                ; name of second sprite
-    sta OAMDATA
-    lda #$00                ; no flip, prio 0, palette 0
-    sta OAMDATA
+.proc GameLoop
+    wai
+    jmp GameLoop  
+.endproc
 
-    ; OAM data for third sprite
-    lda # (256/2 - 8)       ; horizontal position of third sprite
-    sta OAMDATA
-    lda # (224/2)           ; vertical position of third sprite
-    sta OAMDATA
-    lda #$02                ; name of third sprite
-    sta OAMDATA
-    lda #$00                ; no flip, prio 0, palette 0
-    sta OAMDATA
-
-    ; OAM data for fourth sprite
-    lda # (256/2)           ; horizontal position of fourth sprite
-    sta OAMDATA
-    lda # (224/2)           ; vertical position of fourth sprite
-    sta OAMDATA
-    lda #$03                ; name of fourth sprite
-    sta OAMDATA
-    lda #$00                ; no flip, prio 0, palette 0
-    sta OAMDATA
+.proc NMIHandler
+    lda RDNMI
+    rti
 .endproc
 
 .segment "VECTOR"
-.addr ResetHandler
+.addr           $0000,      $0000,          $0000
+.addr           NMIHandler, $0000,          $0000
+.word           $0000,      $0000
+.addr           $0000,      $0000,          $0000
+.addr           $0000,      ResetHandler,   $0000

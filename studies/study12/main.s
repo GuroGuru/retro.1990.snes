@@ -14,13 +14,14 @@ ColorData:  .incbin "SpriteColors.pal"
 .segment "CODE"
 .proc ResetHandler
     clc
-    xce   
-
-    lda #$11
-    sta CGADDR
+    xce  
+     
     ldx #$00    
     stz VMADDL 
     stz VMADDH
+
+    lda #$11
+    sta CGADDR
 
 CGRAMLoop:
     lda ColorData, X

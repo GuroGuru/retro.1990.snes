@@ -1,4 +1,4 @@
-### SnesDevStudies 13 - OAMRAM and tilemaps
+### SnesDevStudies 13 - Displaying objects
 
 ---
 
