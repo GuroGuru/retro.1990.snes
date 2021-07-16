@@ -1,19 +1,34 @@
 INIDISP     = $2100
+
 OAMADDL     = $2102
 OAMADDH     = $2103
 OAMDATA     = $2104
-; VMAINC      = $2115     ; VRAM address increment value designation
+
 VMADDL      = $2116
 VMADDH      = $2117
 VMDATAL     = $2118
 VMDATAH     = $2119
+
 CGADDR      = $2121
 CGDATA      = $2122
+
 TM          = $212c
 NMITIMEN    = $4200
 RDNMI       = $4210
 
+DMASTART    = $420b
+DMAMODE     = $4300
+DMADEST     = $4301
+DMASOURCEL  = $4302
+DMASOURCEH  = $4303
+DMABANK     = $4304
+DMALENGTHL  = $4305
+DMALENGTHH  = $4306
+
+; $2104, $2118, and $2122 (OAM data, VRAM data, and CG data)
+
 .p816
+.i16
 
 .segment "SPRITEDATA"
 SpriteData: .incbin "Sprites.vra"
@@ -24,12 +39,14 @@ ColorData:  .incbin "SpriteColors.pal"
     sei                     ; disable interrupts
     clc                     ; clear the carry flag
     xce                     ; switch the 65816 to native (16-bit mode)
-    
+
+    rep #$10
+
     lda #$8f                ; force v-blanking
     sta INIDISP
     stz NMITIMEN            ; disable NMI
 
-    jsr LoadCGRAM
+    jsr DMACGRAM
     jsr LoadVRAM
     jsr LoadOAMRAM
     
@@ -48,18 +65,26 @@ ColorData:  .incbin "SpriteColors.pal"
     jmp GameLoop
 .endproc
 
-.proc LoadCGRAM
-    lda #$81
-    sta CGADDR
+; $2104, $2118, and $2122 (OAM data, VRAM data, and CG data)
 
-CGRAMLoop:
-    lda ColorData, X
-    sta CGDATA
-    inx
+.proc DMACGRAM
+    stz CGADDR
+    stz DMAMODE
 
-    cpx #$08        ; 4 colors, 2 bytes per color
-    bcc CGRAMLoop
-    ldx #$00
+    lda #$22
+    sta DMADEST
+    
+    ldx #.loword(ColorData)
+    stx DMASOURCEL
+    
+    lda #^ColorData
+    sta DMABANK
+
+    ldx #512
+    stx DMALENGTHL
+
+    lda #1
+    sta DMASTART
 
     rts
 .endproc
