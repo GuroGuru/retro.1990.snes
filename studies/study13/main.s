@@ -1,10 +1,10 @@
+INIDISP     = $2100
 VMADDL      = $2116
 VMADDH      = $2117
 VMDATAL     = $2118
 VMDATAH     = $2119
 CGADDR      = $2121
 CGDATA      = $2122
-INIDISP     = $2100
 TM          = $212c
 NMITIMEN    = $4200
 RDNMI       = $4210
