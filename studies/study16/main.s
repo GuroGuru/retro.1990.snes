@@ -68,7 +68,9 @@ ColorData:  .incbin "SpriteColors.pal"
 ; $2104, $2118, and $2122 (OAM data, VRAM data, and CG data)
 
 .proc DMACGRAM
-    stz CGADDR
+    lda #$81
+    sta CGADDR
+    
     stz DMAMODE
 
     lda #$22
@@ -80,7 +82,7 @@ ColorData:  .incbin "SpriteColors.pal"
     lda #^ColorData
     sta DMABANK
 
-    ldx #512
+    ldx #256
     stx DMALENGTHL
 
     lda #1
