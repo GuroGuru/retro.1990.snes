@@ -47,7 +47,7 @@ ColorData:  .incbin "SpriteColors.pal"
     stz NMITIMEN            ; disable NMI
 
     jsr DMACGRAM
-    jsr LoadVRAM
+    jsr DMAVRAM
     jsr LoadOAMRAM
     
     ; make Objects visible
@@ -82,7 +82,7 @@ ColorData:  .incbin "SpriteColors.pal"
     lda #^ColorData
     sta DMABANK
 
-    ldx #256
+    ldx #8
     stx DMALENGTHL
 
     lda #1
@@ -91,23 +91,26 @@ ColorData:  .incbin "SpriteColors.pal"
     rts
 .endproc
 
-.proc LoadVRAM
-    stz VMADDL              ; set the VRAM address to $0000
-    stz VMADDH   
-    ldx #$00                ; set register X to zero, we will use X as a loop counter and offset
+.proc DMAVRAM
+    stz VMADDL
 
-VRAMLoop:
-    lda SpriteData, X
-    sta VMDATAL
-    inx
+    lda #1
+    sta DMAMODE
 
-    lda SpriteData, X
-    sta VMDATAH
-    inx
+    lda #$18
+    sta DMADEST
+    
+    ldx #.loword(SpriteData)
+    stx DMASOURCEL
+    
+    lda #^SpriteData
+    sta DMABANK
 
-    cpx #$80        ; 4 tiles, 8 rows per tile, 4 bitplanes per row, 1 byte per bitplane
-    bcc VRAMLoop
-    ldx #$00
+    ldx #128
+    stx DMALENGTHL
+
+    lda #1
+    sta DMASTART
     
     rts
 .endproc
