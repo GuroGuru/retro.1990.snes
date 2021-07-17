@@ -25,6 +25,9 @@ DMABANK     = $4304
 DMALENGTHL  = $4305
 DMALENGTHH  = $4306
 
+OAMMIRROR   = $0400     ; location of OAMRAM mirror in WRAM
+OAMMIRROR_SIZE  = $0220 ; OAMRAM can hold data for 128 sprites, 4 bytes each
+
 ; $2104, $2118, and $2122 (OAM data, VRAM data, and CG data)
 
 .p816
@@ -46,9 +49,10 @@ ColorData:  .incbin "SpriteColors.pal"
     sta INIDISP
     stz NMITIMEN            ; disable NMI
 
+    jsr MirrorOAM    
     jsr DMACGRAM
     jsr DMAVRAM
-    jsr LoadOAMRAM
+    jsr DMAOAMRAM
     
     ; make Objects visible
     lda #$10
@@ -66,6 +70,82 @@ ColorData:  .incbin "SpriteColors.pal"
 .endproc
 
 ; $2104, $2118, and $2122 (OAM data, VRAM data, and CG data)
+
+.proc MirrorOAM
+    ; set up initial data in the OAMRAM mirror, use X as index
+    ldx #$00
+
+    ; upper-left sprite
+    lda #(256/2 - 8) ; sprite 1, horizontal position
+    sta OAMMIRROR, X 
+    inx                                 ; increment index
+    lda #(224/2 - 8); sprite 1, vertical position 
+    sta OAMMIRROR, X 
+    inx 
+    lda #$00                            ; sprite 1, name 
+    sta OAMMIRROR, X 
+    inx 
+    lda #$00                            ; no flip, palette 0 
+    sta OAMMIRROR, X 
+    inx 
+
+    ; upper-right sprite 
+    lda #(256/2)               ; sprite 2, horizontal position
+    sta OAMMIRROR, X 
+    inx                                 ; increment index
+    lda #(224/2 - 8); sprite 2, vertical position 
+    sta OAMMIRROR, X 
+    inx 
+    lda #$01                            ; sprite 2, name 
+    sta OAMMIRROR, X 
+    inx 
+    lda #$00                            ; no flip, palette 0 
+    sta OAMMIRROR, X 
+    inx 
+    
+    ; lower-left sprite 
+    lda #(256/2 - 8) ; sprite 3, horizontal position
+    sta OAMMIRROR, X 
+    inx                                 ; increment index
+    lda #(224/2)              ; sprite 3, vertical position 
+    sta OAMMIRROR, X 
+    inx 
+    lda #$02                            ; sprite 3, name 
+    sta OAMMIRROR, X 
+    inx 
+    lda #$00                            ; no flip, palette 0 
+    sta OAMMIRROR, X 
+    inx
+
+    ; lower-right sprite 
+    lda #(256/2)                ; sprite 4, horizontal position
+    sta OAMMIRROR, X 
+    inx                                 ; increment index
+    lda #(224/2)              ; sprite 4, vertical position 
+    sta OAMMIRROR, X 
+    inx 
+    lda #$03                            ; sprite 4, name 
+    sta OAMMIRROR, X 
+    inx 
+    lda #$00                            ; no flip, palette 0 
+    sta OAMMIRROR, X 
+    inx
+
+    ; move the other sprites off screen
+    lda #$ff                ; set the coordinates to (255, 255), which is off screen                            
+    OAMLoop:
+        sta OAMMIRROR, X
+        inx 
+        cpx #OAMMIRROR_SIZE
+        bne OAMLoop
+
+    ; correct extra OAM byte for first four sprites 
+    ldx #$0200
+    lda #$00
+    sta OAMMIRROR, X 
+
+    rts
+.endproc
 
 .proc DMACGRAM
     lda #$81
@@ -115,50 +195,23 @@ ColorData:  .incbin "SpriteColors.pal"
     rts
 .endproc
 
-.proc LoadOAMRAM
-    ; set up OAM data              
-    stz OAMADDL             ; set the OAM address to ...
-    stz OAMADDH             ; ...at $0000
+.proc DMAOAMRAM
+    stz DMAMODE
 
-    ; OAM data for first sprite
-    lda # (256/2 - 8)       ; horizontal position of first sprite
-    sta OAMDATA
-    lda # (224/2 - 8)       ; vertical position of first sprite
-    sta OAMDATA
-    lda #$00                ; name of first sprite
-    sta OAMDATA
-    lda #$00                ; no flip, prio 0, palette 0
-    sta OAMDATA
+    lda #$04
+    sta DMADEST
+    
+    ldx #.loword(OAMMIRROR)
+    stx DMASOURCEL
+    
+    lda #^OAMMIRROR
+    sta DMABANK
 
-    ; OAM data for second sprite
-    lda # (256/2)           ; horizontal position of second sprite
-    sta OAMDATA
-    lda # (224/2 - 8)       ; vertical position of second sprite
-    sta OAMDATA
-    lda #$01                ; name of second sprite
-    sta OAMDATA
-    lda #$00                ; no flip, prio 0, palette 0
-    sta OAMDATA
+    ldx #$0220
+    stx DMALENGTHL
 
-    ; OAM data for third sprite
-    lda # (256/2 - 8)       ; horizontal position of third sprite
-    sta OAMDATA
-    lda # (224/2)           ; vertical position of third sprite
-    sta OAMDATA
-    lda #$02                ; name of third sprite
-    sta OAMDATA
-    lda #$00                ; no flip, prio 0, palette 0
-    sta OAMDATA
-
-    ; OAM data for fourth sprite
-    lda # (256/2)           ; horizontal position of fourth sprite
-    sta OAMDATA
-    lda # (224/2)           ; vertical position of fourth sprite
-    sta OAMDATA
-    lda #$03                ; name of fourth sprite
-    sta OAMDATA
-    lda #$00                ; no flip, prio 0, palette 0
-    sta OAMDATA
+    lda #1
+    sta DMASTART
     
     rts
 .endproc
