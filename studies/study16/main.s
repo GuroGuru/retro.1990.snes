@@ -1,77 +1,45 @@
-INIDISP     = $2100
+; Variables -------------------------------------------------------------------
 
-OAMADDL     = $2102
-OAMADDH     = $2103
-OAMDATA     = $2104
-
-VMADDL      = $2116
-VMADDH      = $2117
-VMDATAL     = $2118
-VMDATAH     = $2119
-
-CGADDR      = $2121
-CGDATA      = $2122
-
-TM          = $212c
-NMITIMEN    = $4200
-RDNMI       = $4210
-
-DMASTART    = $420b
-DMAMODE     = $4300
-DMADEST     = $4301
-DMASOURCEL  = $4302
-DMASOURCEH  = $4303
-DMABANK     = $4304
-DMALENGTHL  = $4305
-DMALENGTHH  = $4306
-
-OAMMIRROR   = $0400     ; location of OAMRAM mirror in WRAM
+INIDISP         = $2100
+OAMADDL         = $2102
+OAMADDH         = $2103
+OAMDATA         = $2104
+VMADDL          = $2116
+VMADDH          = $2117
+VMDATAL         = $2118
+VMDATAH         = $2119
+CGADDR          = $2121
+CGDATA          = $2122
+TM              = $212c
+NMITIMEN        = $4200
+RDNMI           = $4210
+DMASTART        = $420b
+DMAMODE         = $4300
+DMADEST         = $4301 ; $2104, $2118, and $2122 (OAM data, VRAM data, and CG data)
+DMASOURCEL      = $4302
+DMASOURCEH      = $4303
+DMABANK         = $4304
+DMALENGTHL      = $4305
+DMALENGTHH      = $4306
+OAMMIRROR       = $0400 ; location of OAMRAM mirror in WRAM
 OAMMIRROR_SIZE  = $0220 ; OAMRAM can hold data for 128 sprites, 4 bytes each
 
-; $2104, $2118, and $2122 (OAM data, VRAM data, and CG data)
-
-.p816
-.i16
+; Binaries includes -----------------------------------------------------------
 
 .segment "SPRITEDATA"
 SpriteData: .incbin "Sprites.vra"
 ColorData:  .incbin "SpriteColors.pal"
 
+; -----------------------------------------------------------------------------
+
+.p816
+.i16
+
 .segment "CODE"
-.proc ResetHandler
-    sei                     ; disable interrupts
-    clc                     ; clear the carry flag
-    xce                     ; switch the 65816 to native (16-bit mode)
 
-    rep #$10
+; Buffering OAM data ----------------------------------------------------------
 
-    lda #$8f                ; force v-blanking
-    sta INIDISP
-    stz NMITIMEN            ; disable NMI
-
-    jsr MirrorOAM    
-    jsr DMACGRAM
-    jsr DMAVRAM
-    jsr DMAOAMRAM
-    
-    ; make Objects visible
-    lda #$10
-    sta TM
-    
-    ; release forced blanking, set screen to full brightness
-    lda #$0f
-    sta INIDISP
-    
-    ; enable NMI, turn on automatic joypad polling
-    lda #$81
-    sta NMITIMEN    
-
-    jmp GameLoop
-.endproc
-
-; $2104, $2118, and $2122 (OAM data, VRAM data, and CG data)
-
-.proc MirrorOAM
+.proc SetOAMBuffer
     ; set up initial data in the OAMRAM mirror, use X as index
     ldx #$00
 
@@ -147,7 +115,9 @@ ColorData:  .incbin "SpriteColors.pal"
     rts
 .endproc
 
-.proc DMACGRAM
+; DMA transfers ---------------------------------------------------------------
+
+.proc DMAFromPaletteToCGRAM
     lda #$81
     sta CGADDR
     
@@ -171,7 +141,7 @@ ColorData:  .incbin "SpriteColors.pal"
     rts
 .endproc
 
-.proc DMAVRAM
+.proc DMAFromTilesToVRAM
     stz VMADDL
 
     lda #1
@@ -195,7 +165,11 @@ ColorData:  .incbin "SpriteColors.pal"
     rts
 .endproc
 
-.proc DMAOAMRAM
+.proc DMAFromTilemapToVRAM
+
+.endproc
+
+.proc DMAFromOAMBufferToOAMRAM
     stz DMAMODE
 
     lda #$04
@@ -216,15 +190,52 @@ ColorData:  .incbin "SpriteColors.pal"
     rts
 .endproc
 
-.proc GameLoop
-    wai
-    jmp GameLoop  
+; Event handlers --------------------------------------------------------------
+
+.proc ResetHandler
+    sei                     ; disable interrupts
+    clc                     ; clear the carry flag
+    xce                     ; switch the 65816 to native (16-bit mode)
+
+    rep #$10
+
+    lda #$8f                ; force v-blanking
+    sta INIDISP
+    stz NMITIMEN            ; disable NMI
+
+    jsr SetOAMBuffer    
+    jsr DMAFromPaletteToCGRAM
+    jsr DMAFromTilesToVRAM
+    jsr DMAFromOAMBufferToOAMRAM
+    
+    ; make Objects visible
+    lda #$10
+    sta TM
+    
+    ; release forced blanking, set screen to full brightness
+    lda #$0f
+    sta INIDISP
+    
+    ; enable NMI, turn on automatic joypad polling
+    lda #$81
+    sta NMITIMEN    
+
+    jmp GameLoop
 .endproc
 
 .proc NMIHandler
     lda RDNMI
     rti
 .endproc
+
+; Game logic goes here --------------------------------------------------------
+
+.proc GameLoop
+    wai
+    jmp GameLoop  
+.endproc
+
+; Event listeners (hardware vectors) ------------------------------------------
 
 .segment "VECTOR"
 .addr           $0000,      $0000,          $0000
