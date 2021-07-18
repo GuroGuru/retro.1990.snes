@@ -16,8 +16,8 @@ RDNMI       = $4210
 .p816
 
 .segment "SPRITEDATA"
-SpriteData: .incbin "Sprites.vra"
-ColorData:  .incbin "SpriteColors.pal"
+SpriteTiles: .incbin "square.chr"
+SpriteColors: .incbin "square.pal"
 
 .segment "CODE"
 .proc ResetHandler
@@ -53,7 +53,7 @@ ColorData:  .incbin "SpriteColors.pal"
     sta CGADDR
 
 CGRAMLoop:
-    lda ColorData, X
+    lda SpriteColors, X
     sta CGDATA
     inx
 
@@ -70,11 +70,11 @@ CGRAMLoop:
     ldx #$00                ; set register X to zero, we will use X as a loop counter and offset
 
 VRAMLoop:
-    lda SpriteData, X
+    lda SpriteTiles, X
     sta VMDATAL
     inx
 
-    lda SpriteData, X
+    lda SpriteTiles, X
     sta VMDATAH
     inx
 

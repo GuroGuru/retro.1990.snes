@@ -27,8 +27,8 @@ OAMMIRROR_SIZE  = $0220 ; OAMRAM can hold data for 128 sprites, 4 bytes each
 ; Binaries includes -----------------------------------------------------------
 
 .segment "SPRITEDATA"
-SpriteData: .incbin "Sprites.vra"
-ColorData:  .incbin "SpriteColors.pal"
+SpriteTiles: .incbin "square.chr"
+SpriteColors: .incbin "square.pal"
 
 ; -----------------------------------------------------------------------------
 
@@ -99,8 +99,8 @@ ColorData:  .incbin "SpriteColors.pal"
     sta OAMMIRROR, X 
     inx
 
-    ; move the other sprites off screen
-    lda #$ff                ; set the coordinates to (255, 255), which is off screen                            
+    ; move the other sprites off screen (set the coordinates to [255, 255], which is off screen)
+    lda #$ff                          
     OAMLoop:
         sta OAMMIRROR, X
         inx 
@@ -126,10 +126,10 @@ ColorData:  .incbin "SpriteColors.pal"
     lda #$22
     sta DMADEST
     
-    ldx #.loword(ColorData)
+    ldx #.loword(SpriteColors)
     stx DMASOURCEL
     
-    lda #^ColorData
+    lda #^SpriteColors
     sta DMABANK
 
     ldx #8
@@ -150,10 +150,10 @@ ColorData:  .incbin "SpriteColors.pal"
     lda #$18
     sta DMADEST
     
-    ldx #.loword(SpriteData)
+    ldx #.loword(SpriteTiles)
     stx DMASOURCEL
     
-    lda #^SpriteData
+    lda #^SpriteTiles
     sta DMABANK
 
     ldx #128
