@@ -9,7 +9,7 @@ CGDATA      = $2122
 
 .segment "SPRITEDATA"
 SpriteTiles: .incbin "square.chr"
-SpriteColors:  .incbin "square.pal"
+SpriteColors: .incbin "square.pal"
 
 .segment "CODE"
 .proc ResetHandler
