@@ -1,4 +1,4 @@
-### SnesDevStudies 14
+### SnesDevStudies 14 - NMI handling, display settings and displaying objects
 
 ---
 

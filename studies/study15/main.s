@@ -13,7 +13,7 @@ TM          = $212c
 NMITIMEN    = $4200
 RDNMI       = $4210
 
-.p816
+.p816 
 
 .segment "SPRITEDATA"
 SpriteTiles: .incbin "square.chr"
@@ -29,29 +29,13 @@ SpriteColors: .incbin "square.pal"
     sta INIDISP
     stz NMITIMEN            ; disable NMI
 
-    jsr LoadCGRAM
-    jsr LoadVRAM
-    jsr LoadOAMRAM
+    ; transfer VRAM data
+    stz VMADDL              ; set the VRAM address to $0000
+    stz VMADDH   
+    ldx #$00                ; set register X to zero, we will use X as a loop counter and offset
     
-    ; make Objects visible
-    lda #$10
-    sta TM
-    
-    ; release forced blanking, set screen to full brightness
-    lda #$0f
-    sta INIDISP
-    
-    ; enable NMI, turn on automatic joypad polling
-    lda #$81
-    sta NMITIMEN    
-
-    jmp GameLoop
-.endproc
-
-.proc LoadCGRAM
     lda #$81
     sta CGADDR
-
 CGRAMLoop:
     lda SpriteColors, X
     sta CGDATA
@@ -60,14 +44,6 @@ CGRAMLoop:
     cpx #$08        ; 4 colors, 2 bytes per color
     bcc CGRAMLoop
     ldx #$00
-
-    rts
-.endproc
-
-.proc LoadVRAM
-    stz VMADDL              ; set the VRAM address to $0000
-    stz VMADDH   
-    ldx #$00                ; set register X to zero, we will use X as a loop counter and offset
 
 VRAMLoop:
     lda SpriteTiles, X
@@ -81,11 +57,8 @@ VRAMLoop:
     cpx #$80        ; 4 tiles, 8 rows per tile, 4 bitplanes per row, 1 byte per bitplane
     bcc VRAMLoop
     ldx #$00
-    
-    rts
-.endproc
 
-.proc LoadOAMRAM
+PositioningObjects:
     ; set up OAM data              
     stz OAMADDL             ; set the OAM address to ...
     stz OAMADDH             ; ...at $0000
@@ -129,8 +102,19 @@ VRAMLoop:
     sta OAMDATA
     lda #$00                ; no flip, prio 0, palette 0
     sta OAMDATA
+
+DisplayingObjects:
+    ; make Objects visible
+    lda #$10
+    sta TM
     
-    rts
+    ; release forced blanking, set screen to full brightness
+    lda #$0f
+    sta INIDISP
+    
+    ; enable NMI, turn on automatic joypad polling
+    lda #$81
+    sta NMITIMEN    
 .endproc
 
 .proc GameLoop

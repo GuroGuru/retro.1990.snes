@@ -1,4 +1,4 @@
-### SnesDevStudies 13 - NMI handling, display settings and displaying objects
+### SnesDevStudies 13 - Tiles and palettes
 
 ---
 
