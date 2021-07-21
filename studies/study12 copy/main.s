@@ -44,6 +44,10 @@ VRAMLoop:
     cpx #$80        ; 4 tiles, 8 rows per tile, 4 bitplanes per row, 1 byte per bitplane
     bcc VRAMLoop
     ldx #$00
+
+; TilemapLoop:
+;     lda #$02
+;     sta $0
 .endproc
 
 .segment "VECTOR"
